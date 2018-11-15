@@ -1,0 +1,12 @@
+﻿@{
+}
+
+<h2>Remove Cheese</h2>
+
+<form asp-controller="Cheese" asp-action="RemCheese" method="post">
+    @foreach(Cheese cheese in ViewBag.cheeses)
+    {
+        <input name="name" type="checkbox" value="@cheese.Name"> @cheese.Name<br>
+    }
+    <input type="submit" value="Remove Cheese" />
+</form>
