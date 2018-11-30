@@ -12,11 +12,10 @@ namespace CheeseMVC.Controllers
     public class CheeseController : Controller
     {
 
-        static private List<Cheese> Cheeses = new List<Cheese>();
         // GET: /<controller>/
         public IActionResult Index()
         {
-            ViewBag.cheeses = Cheeses;
+            ViewBag.cheeses = CheeseData.GetAll();
 
             return View();
         }
@@ -28,50 +27,29 @@ namespace CheeseMVC.Controllers
 
         public IActionResult Remove()
         {
-            ViewBag.cheeses = Cheeses;
+            ViewBag.title = "Remove Cheeses";
+            ViewBag.cheeses = CheeseData.GetAll();
             return View();
         }
 
         [HttpPost]
         [Route("/Cheese/Add")]
-        public IActionResult NewCheese(string name, string description)
+        public IActionResult NewCheese(Cheese newCheese)
         {
-            // Validate entries
-            if (name == null || name.Any(char.IsDigit))
-            {
-                ViewBag.error = "Invalid cheese name";
-                return View("Add");
-            }
-
-
-            // Add the new cheese to the existing cheeses
-            Cheese addCheese = new Cheese();
-            addCheese.Name = name;
-            addCheese.Description = description;
-            Cheeses.Add(addCheese);
+            CheeseData.Add(newCheese);
             return Redirect("/Cheese");
         }
 
         [HttpPost]
         [Route("/Cheese/Remove")]
-        public IActionResult RemCheese(string[] name)
+        public IActionResult Remove(int[] cheeseIds)
         {
-            List<string> cheeseNames = new List<string>();
-            int idxCheese;
-            
-            
             // Remove the selected cheeses from the list
-            foreach(string select in name)
+            foreach(int cheeseId in cheeseIds)
             {
-                foreach (Cheese cheese in Cheeses)
-                {
-                    cheeseNames.Add(cheese.Name);
-                }
-                idxCheese = cheeseNames.IndexOf(select);
-                Cheeses.Remove(Cheeses[idxCheese]);
-                cheeseNames.Clear();
+                CheeseData.Remove(cheeseId);
             }
-            return Redirect("/Cheese");
+            return Redirect("/");
         }
         
 

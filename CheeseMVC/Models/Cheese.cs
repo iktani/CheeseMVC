@@ -7,8 +7,22 @@ namespace CheeseMVC.Models
 {
     public class Cheese
     {
+        private static int nextCheeseId = 1;
+        public int CheeseId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public Cheese() 
+        {
+            CheeseId = nextCheeseId;
+            nextCheeseId++;
+        }
+
+        
+        
+            
+
+
     }
 
 }
