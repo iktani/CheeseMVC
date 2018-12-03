@@ -39,14 +39,7 @@ namespace CheeseMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                Cheese newCheese = new Cheese
-                {
-                    Name = addCheeseViewModel.Name,
-                    Description = addCheeseViewModel.Description,
-                    Type = addCheeseViewModel.Type
-                };
-
-                CheeseData.Add(newCheese);
+                CheeseData.Add(addCheeseViewModel.CreateCheese());
                 return Redirect("/Cheese");
 
             }
@@ -69,17 +62,33 @@ namespace CheeseMVC.Controllers
 
         public IActionResult Edit(int cheeseId)
         {
-            ViewBag.cheese = CheeseData.GetById(cheeseId);
-            return View();
+            Cheese cheeseToEdit = CheeseData.GetById(cheeseId);
+            AddEditCheeseViewModel addEditCheeseViewModel = new AddEditCheeseViewModel
+            {
+                Name = cheeseToEdit.Name,
+                Description = cheeseToEdit.Description,
+                Rating = cheeseToEdit.Rating,
+                Type = cheeseToEdit.Type,
+                CheeseId = cheeseId
+            };
+
+            return View(addEditCheeseViewModel);
         }
 
         [HttpPost]
-        public IActionResult Edit(int cheeseId, string name, string description)
+        public IActionResult Edit(AddEditCheeseViewModel addEditCheeseViewModel)
         {
-            Cheese cheeseToEdit = CheeseData.GetById(cheeseId);
-            cheeseToEdit.Name = name;
-            cheeseToEdit.Description = description;
-            return Redirect("/");
+            if (ModelState.IsValid)
+            {
+                Cheese cheeseToEdit = CheeseData.GetById(addEditCheeseViewModel.CheeseId);
+                cheeseToEdit.Name = addEditCheeseViewModel.Name;
+                cheeseToEdit.Description = addEditCheeseViewModel.Description;
+                cheeseToEdit.Rating = addEditCheeseViewModel.Rating;
+                cheeseToEdit.Type = addEditCheeseViewModel.Type;
+                return Redirect("/");
+            }
+
+            return View(addEditCheeseViewModel);
 
         }
         
